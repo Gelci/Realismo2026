@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Instagram, 
@@ -11,72 +11,21 @@ import {
   Menu, 
   X, 
   ChevronRight, 
+  ChevronLeft,
   ArrowUpRight,
   User,
   Image as ImageIcon,
-  MessageSquare
+  MessageSquare,
+  Loader2,
+  CheckCircle
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { DRAWINGS, type Drawing } from './data/artes';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-// --- Types ---
-interface Drawing {
-  id: number;
-  title: string;
-  category: string;
-  year: string;
-  imageUrl: string;
-}
-
-// --- Mock Data ---
-const DRAWINGS: Drawing[] = [
-  {
-    id: 1,
-    title: "Olhar Profundo",
-    category: "Retrato",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/portrait1/800/1000?grayscale"
-  },
-  {
-    id: 2,
-    title: "Texturas do Tempo",
-    category: "Natureza Morta",
-    year: "2024",
-    imageUrl: "https://picsum.photos/seed/still/800/800?grayscale"
-  },
-  {
-    id: 3,
-    title: "Expressão Silenciosa",
-    category: "Retrato",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/portrait2/800/1100?grayscale"
-  },
-  {
-    id: 4,
-    title: "O Velho Pescador",
-    category: "Retrato",
-    year: "2024",
-    imageUrl: "https://picsum.photos/seed/oldman/800/900?grayscale"
-  },
-  {
-    id: 5,
-    title: "Luz e Sombra",
-    category: "Estudo",
-    year: "2022",
-    imageUrl: "https://picsum.photos/seed/study1/800/800?grayscale"
-  },
-  {
-    id: 6,
-    title: "Arquitetura Clássica",
-    category: "Paisagem",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/arch/1000/800?grayscale"
-  }
-];
 
 // --- Components ---
 
@@ -133,7 +82,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-paper border-b border-graphite/10 p-6 flex flex-col space-y-4 md:hidden"
+            className="absolute top-full left-0 w-full bg-paper border-b border-graphite/10 p-6 flex flex-col space-y-4 md:hidden shadow-xl"
           >
             {navLinks.map((link) => (
               <a 
@@ -216,11 +165,39 @@ const Hero = () => {
 
 const Gallery = () => {
   const [filter, setFilter] = useState('Todos');
+  const [selectedDrawing, setSelectedDrawing] = useState<Drawing | null>(null);
   const categories = ['Todos', 'Retrato', 'Natureza Morta', 'Paisagem', 'Estudo'];
 
   const filteredDrawings = filter === 'Todos' 
     ? DRAWINGS 
     : DRAWINGS.filter(d => d.category === filter);
+
+  const handleNext = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!selectedDrawing) return;
+    const currentIndex = filteredDrawings.findIndex(d => d.id === selectedDrawing.id);
+    const nextIndex = (currentIndex + 1) % filteredDrawings.length;
+    setSelectedDrawing(filteredDrawings[nextIndex]);
+  }, [filteredDrawings, selectedDrawing]);
+
+  const handlePrev = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!selectedDrawing) return;
+    const currentIndex = filteredDrawings.findIndex(d => d.id === selectedDrawing.id);
+    const prevIndex = (currentIndex - 1 + filteredDrawings.length) % filteredDrawings.length;
+    setSelectedDrawing(filteredDrawings[prevIndex]);
+  }, [filteredDrawings, selectedDrawing]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedDrawing) return;
+      if (e.key === 'Escape') setSelectedDrawing(null);
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDrawing, handleNext, handlePrev]);
 
   return (
     <section id="gallery" className="py-24 bg-white/30">
@@ -258,8 +235,9 @@ const Gallery = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.5 }}
                 className="group cursor-pointer"
+                onClick={() => setSelectedDrawing(drawing)}
               >
-                <div className="relative overflow-hidden aspect-[3/4] rounded-lg mb-4 bg-paper">
+                <div className="relative overflow-hidden aspect-[3/4] rounded-lg mb-4 bg-paper shadow-md group-hover:shadow-xl transition-all duration-500">
                   <img 
                     src={drawing.imageUrl} 
                     alt={drawing.title}
@@ -284,6 +262,67 @@ const Gallery = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedDrawing && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-graphite/95 backdrop-blur-sm p-4"
+            onClick={() => setSelectedDrawing(null)}
+          >
+            <button 
+              className="absolute top-6 right-6 text-paper/70 hover:text-paper transition-colors"
+              onClick={() => setSelectedDrawing(null)}
+            >
+              <X size={32} />
+            </button>
+
+            <button 
+              className="absolute left-4 md:left-8 text-paper/50 hover:text-paper transition-colors hidden md:block"
+              onClick={handlePrev}
+            >
+              <ChevronLeft size={48} />
+            </button>
+
+            <button 
+              className="absolute right-4 md:right-8 text-paper/50 hover:text-paper transition-colors hidden md:block"
+              onClick={handleNext}
+            >
+              <ChevronRight size={48} />
+            </button>
+
+            <div 
+              className="max-w-5xl w-full max-h-[90vh] flex flex-col md:flex-row gap-8 bg-paper rounded-lg overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
+                <img 
+                  src={selectedDrawing.imageUrl} 
+                  alt={selectedDrawing.title}
+                  className="max-w-full max-h-[60vh] md:max-h-[85vh] object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="w-full md:w-80 p-8 flex flex-col justify-center bg-paper border-l border-graphite/5">
+                <span className="text-xs uppercase tracking-widest text-lead-light mb-2">{selectedDrawing.category}</span>
+                <h3 className="text-3xl font-serif mb-4">{selectedDrawing.title}</h3>
+                <div className="w-12 h-1 bg-graphite mb-6"></div>
+                <p className="text-lead-dark mb-8 text-sm leading-relaxed">
+                  Uma obra detalhada criada em {selectedDrawing.year}. Este desenho explora as nuances de luz e sombra, 
+                  utilizando grafite de alta qualidade sobre papel texturizado.
+                </p>
+                <div className="mt-auto">
+                  <p className="text-xs text-lead-light uppercase tracking-widest mb-1">Ano</p>
+                  <p className="font-mono">{selectedDrawing.year}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
@@ -347,6 +386,19 @@ const About = () => {
 };
 
 const Contact = () => {
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus('submitting');
+    // Simulate API call
+    setTimeout(() => {
+      setFormStatus('success');
+      // Reset after 3 seconds
+      setTimeout(() => setFormStatus('idle'), 3000);
+    }, 1500);
+  };
+
   return (
     <section id="contact" className="py-24 bg-graphite text-paper relative">
       <div className="absolute inset-0 paper-texture opacity-5 pointer-events-none" />
@@ -373,23 +425,47 @@ const Contact = () => {
             </div>
           </div>
 
-          <form className="text-left bg-paper/5 p-8 rounded-3xl border border-paper/10">
+          <form onSubmit={handleSubmit} className="text-left bg-paper/5 p-8 rounded-3xl border border-paper/10 relative overflow-hidden">
+            <AnimatePresence>
+              {formStatus === 'success' && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-graphite z-20 flex flex-col items-center justify-center text-center p-8"
+                >
+                  <CheckCircle size={64} className="text-green-400 mb-4" />
+                  <h3 className="text-2xl font-serif mb-2">Mensagem Enviada!</h3>
+                  <p className="text-lead-light">Obrigado pelo contato. Responderei em breve.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label className="block text-xs uppercase tracking-widest mb-2 opacity-70">Nome</label>
-                <input type="text" className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none" />
+                <input required type="text" className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none" />
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest mb-2 opacity-70">Email</label>
-                <input type="email" className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none" />
+                <input required type="email" className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none" />
               </div>
             </div>
             <div className="mb-8">
               <label className="block text-xs uppercase tracking-widest mb-2 opacity-70">Mensagem</label>
-              <textarea rows={4} className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none resize-none"></textarea>
+              <textarea required rows={4} className="w-full bg-transparent border-b border-paper/20 py-2 focus:border-paper transition-colors outline-none resize-none"></textarea>
             </div>
-            <button className="w-full py-4 bg-paper text-graphite rounded-full font-bold uppercase tracking-widest hover:bg-lead-light transition-all">
-              Enviar Mensagem
+            <button 
+              disabled={formStatus === 'submitting'}
+              className="w-full py-4 bg-paper text-graphite rounded-full font-bold uppercase tracking-widest hover:bg-lead-light transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {formStatus === 'submitting' ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} /> Enviando...
+                </>
+              ) : (
+                'Enviar Mensagem'
+              )}
             </button>
           </form>
         </div>
@@ -401,7 +477,7 @@ const Contact = () => {
 const Footer = () => {
   return (
     <footer className="py-12 border-t border-graphite/5">
-      <div className="container mx-auto px-6 flex flex-col md:row justify-between items-center gap-6">
+      <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
         <p className="text-sm text-lead-light">
           © {new Date().getFullYear()} GelciArts. Todos os direitos reservados.
         </p>

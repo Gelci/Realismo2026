@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
 import { 
   Instagram, 
   Mail, 
@@ -17,7 +17,9 @@ import {
   Image as ImageIcon,
   MessageSquare,
   Loader2,
-  CheckCircle
+  CheckCircle,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -27,7 +29,72 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// --- Custom Hooks ---
+const useMousePosition = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updateMousePosition = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", updateMousePosition);
+
+    return () => {
+      window.removeEventListener("mousemove", updateMousePosition);
+    };
+  }, []);
+
+  return mousePosition;
+};
+
 // --- Components ---
+
+const CustomCursor = () => {
+  const { x, y } = useMousePosition();
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseOver = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).tagName === 'A' || (e.target as HTMLElement).tagName === 'BUTTON' || (e.target as HTMLElement).closest('a') || (e.target as HTMLElement).closest('button')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => window.removeEventListener('mouseover', handleMouseOver);
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 w-6 h-6 border-2 border-graphite rounded-full pointer-events-none z-[100] hidden md:block mix-blend-difference"
+      animate={{
+        x: x - 12,
+        y: y - 12,
+        scale: isHovering ? 2.5 : 1,
+        backgroundColor: isHovering ? 'rgba(255, 255, 255, 1)' : 'transparent',
+        borderColor: isHovering ? 'transparent' : 'white'
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 28,
+        mass: 0.5
+      }}
+    >
+      {isHovering && (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }}
+          className="w-full h-full flex items-center justify-center text-[4px] font-bold text-black uppercase tracking-widest"
+        >
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -166,6 +233,10 @@ const Hero = () => {
 const Gallery = () => {
   const [filter, setFilter] = useState('Todos');
   const [selectedDrawing, setSelectedDrawing] = useState<Drawing | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLImageElement>(null);
+
   const categories = ['Todos', 'Retrato', 'Natureza Morta', 'Paisagem', 'Estudo'];
 
   const filteredDrawings = filter === 'Todos' 
@@ -175,6 +246,7 @@ const Gallery = () => {
   const handleNext = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (!selectedDrawing) return;
+    setIsZoomed(false);
     const currentIndex = filteredDrawings.findIndex(d => d.id === selectedDrawing.id);
     const nextIndex = (currentIndex + 1) % filteredDrawings.length;
     setSelectedDrawing(filteredDrawings[nextIndex]);
@@ -183,6 +255,7 @@ const Gallery = () => {
   const handlePrev = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (!selectedDrawing) return;
+    setIsZoomed(false);
     const currentIndex = filteredDrawings.findIndex(d => d.id === selectedDrawing.id);
     const prevIndex = (currentIndex - 1 + filteredDrawings.length) % filteredDrawings.length;
     setSelectedDrawing(filteredDrawings[prevIndex]);
@@ -191,13 +264,29 @@ const Gallery = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedDrawing) return;
-      if (e.key === 'Escape') setSelectedDrawing(null);
+      if (e.key === 'Escape') {
+        if (isZoomed) setIsZoomed(false);
+        else setSelectedDrawing(null);
+      }
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedDrawing, handleNext, handlePrev]);
+  }, [selectedDrawing, isZoomed, handleNext, handlePrev]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isZoomed || !imageRef.current) return;
+    const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setMousePosition({ x, y });
+  };
+
+  const toggleZoom = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsZoomed(!isZoomed);
+  };
 
   return (
     <section id="gallery" className="py-24 bg-white/30">
@@ -298,15 +387,37 @@ const Gallery = () => {
               className="max-w-5xl w-full max-h-[90vh] flex flex-col md:flex-row gap-8 bg-paper rounded-lg overflow-hidden shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
-                <img 
-                  src={selectedDrawing.imageUrl} 
-                  alt={selectedDrawing.title}
-                  className="max-w-full max-h-[60vh] md:max-h-[85vh] object-contain"
-                  referrerPolicy="no-referrer"
-                />
+              <div 
+                className="flex-1 bg-black flex items-center justify-center relative overflow-hidden cursor-zoom-in"
+                onMouseMove={handleMouseMove}
+                onClick={toggleZoom}
+              >
+                <div 
+                  className={cn(
+                    "relative transition-transform duration-200 ease-out w-full h-full flex items-center justify-center",
+                    isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
+                  )}
+                >
+                  <img 
+                    ref={imageRef}
+                    src={selectedDrawing.imageUrl} 
+                    alt={selectedDrawing.title}
+                    className={cn(
+                      "max-w-full max-h-[60vh] md:max-h-[85vh] object-contain transition-all duration-200",
+                      isZoomed ? "scale-[2.5]" : "scale-100"
+                    )}
+                    style={isZoomed ? {
+                      transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`
+                    } : undefined}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+
+                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-2 rounded-full text-white/70 pointer-events-none">
+                   {isZoomed ? <ZoomOut size={20} /> : <ZoomIn size={20} />}
+                </div>
               </div>
-              <div className="w-full md:w-80 p-8 flex flex-col justify-center bg-paper border-l border-graphite/5">
+              <div className="w-full md:w-80 p-8 flex flex-col justify-center bg-paper border-l border-graphite/5 relative z-10">
                 <span className="text-xs uppercase tracking-widest text-lead-light mb-2">{selectedDrawing.category}</span>
                 <h3 className="text-3xl font-serif mb-4">{selectedDrawing.title}</h3>
                 <div className="w-12 h-1 bg-graphite mb-6"></div>
@@ -491,29 +602,19 @@ const Footer = () => {
   );
 };
 
-export default function App() {
+const App = () => {
   return (
-    <div className="min-h-screen selection:bg-graphite selection:text-paper">
+    <div className="font-sans text-graphite bg-paper min-h-screen relative selection:bg-graphite selection:text-paper">
+      <CustomCursor />
+      <div className="noise-overlay pointer-events-none fixed inset-0 z-50 opacity-[0.03]"></div>
       <Navbar />
-      <main>
-        <Hero />
-        <Gallery />
-        <About />
-        <Contact />
-      </main>
+      <Hero />
+      <Gallery />
+      <About />
+      <Contact />
       <Footer />
-      
-      {/* Custom Cursor or other decorative elements could go here */}
-      <div className="fixed bottom-8 right-8 z-40">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="w-12 h-12 bg-graphite text-paper rounded-full flex items-center justify-center shadow-xl"
-        >
-          <ArrowUpRight className="-rotate-45" size={20} />
-        </motion.button>
-      </div>
     </div>
   );
-}
+};
+
+export default App;

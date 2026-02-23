@@ -27,51 +27,58 @@ export interface Drawing {
 export const DRAWINGS: Drawing[] = [
   {
     id: 1,
-    title: "Olhar Profundo",
+    title: "Olhar Profundo,usando a cor azul",
     category: "Retrato",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/portrait1/800/1000?grayscale"
+    year: "2024",
+    imageUrl: "/artes/cat.jpg" // O caminho da sua imagem
   },
   {
     id: 2,
-    title: "Texturas do Tempo",
-    category: "Natureza Morta",
-    year: "2024",
-    imageUrl: "https://picsum.photos/seed/still/800/800?grayscale"
+    title: "Olhar Oriental",
+    category: "Retrato",
+    year: "2022",
+    imageUrl: "/artes/Japa.jpg" // O caminho da sua imagem
   },
   {
     id: 3,
-    title: "Expressão Silenciosa",
+    title: "Auto Retrato",
     category: "Retrato",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/portrait2/800/1100?grayscale"
+    year: "2021",
+    imageUrl: "/artes/Andrielly.jpg" // O caminho da sua imagem
   },
   {
     id: 4,
-    title: "O Velho Pescador",
+    title: "O Artista Rap",
     category: "Retrato",
-    year: "2024",
-    imageUrl: "https://picsum.photos/seed/oldman/800/900?grayscale"
+    year: "2016",
+    imageUrl: "/artes/projota.jpg" // O caminho da sua imagem
   },
   {
     id: 5,
-    title: "Luz e Sombra",
-    category: "Estudo",
-    year: "2022",
-    imageUrl: "https://picsum.photos/seed/study1/800/800?grayscale"
+    title: "Artista Debby Ryan",
+    category: "Retrato",
+    year: "2016",
+    imageUrl: "/artes/retrato1.jpg" // O caminho da sua imagem
   },
   {
     id: 6,
-    title: "Arquitetura Clássica",
-    category: "Paisagem",
-    year: "2023",
-    imageUrl: "https://picsum.photos/seed/arch/1000/800?grayscale"
+    title: "Sobrenatural a Série",
+    category: "Retrato",
+    year: "2018",
+    imageUrl: "/artes/Sobrenatural.jpg" // O caminho da sua imagem
   },
   {
   id: 7, // Use um número novo
-  title: "Testando o titulo da obra",
+  title: "Almas Gêmeas",
   category: "Retrato", // Categoria
-  year: "2024",
+  year: "2017",
   imageUrl: "/artes/Caomulher.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 8, // Use um número novo
+  title: "Expirado na cantora Amy",
+  category: "Retrato", // Categoria
+  year: "2022",
+  imageUrl: "/artes/Amy.jpg" // O caminho da sua imagem
   }
 ];

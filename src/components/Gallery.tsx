@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Info } from 'lucide-react';
 import { DRAWINGS, type Drawing } from '../data/artes';
 import { cn } from '../utils/cn';
 import { SketchCircle, SketchHighlight } from './ui/Sketches';
@@ -9,6 +9,7 @@ export const Gallery = () => {
     const [filter, setFilter] = useState('Todos');
     const [selectedDrawing, setSelectedDrawing] = useState<Drawing | null>(null);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
 
@@ -82,20 +83,20 @@ export const Gallery = () => {
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                     <div>
-                        <h2 className="text-5xl font-serif mb-4 relative inline-block">
+                        <h2 className="text-4xl md:text-5xl font-serif mb-4 relative inline-block">
                             Galeria
                             <SketchHighlight className="absolute -bottom-2 -right-4 w-32 h-6 text-lead-light opacity-30 z-0 rotate-2" />
                         </h2>
-                        <p className="text-lead-dark max-w-sm">Uma seleção de obras originais e estudos técnicos.</p>
+                        <p className="text-lead-dark max-w-sm text-sm md:text-base">Uma seleção de obras originais e estudos técnicos.</p>
                     </div>
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-2 md:gap-4">
                         {categories.map(cat => (
                             <button
                                 key={cat}
                                 onClick={() => setFilter(cat)}
                                 className={cn(
-                                    "px-4 py-2 text-sm uppercase tracking-widest transition-all border-b-2 relative flex items-center gap-2",
+                                    "px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm uppercase tracking-widest transition-all border-b-2 relative flex items-center gap-2",
                                     filter === cat ? "border-graphite text-graphite" : "border-transparent text-lead-light hover:text-graphite"
                                 )}
                             >
@@ -119,7 +120,7 @@ export const Gallery = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                     <AnimatePresence mode="popLayout">
                         {filteredDrawings.length > 0 ? (
                             filteredDrawings.map((drawing) => (
@@ -151,10 +152,10 @@ export const Gallery = () => {
                                     </div>
                                     <div className="flex justify-between items-start px-2">
                                         <div>
-                                            <h3 className="text-xl font-serif italic group-hover:text-graphite transition-colors">{drawing.title}</h3>
-                                            <p className="text-xs uppercase tracking-widest text-lead-light">{drawing.category}</p>
+                                            <h3 className="text-lg md:text-xl font-serif italic group-hover:text-graphite transition-colors">{drawing.title}</h3>
+                                            <p className="text-[10px] md:text-xs uppercase tracking-widest text-lead-light">{drawing.category}</p>
                                         </div>
-                                        <span className="text-xs font-mono text-lead-light border border-graphite/10 px-2 py-1 rounded">{drawing.year}</span>
+                                        <span className="text-[10px] md:text-xs font-mono text-lead-light border border-graphite/10 px-2 py-1 rounded">{drawing.year}</span>
                                     </div>
                                 </motion.div>
                             ))
@@ -182,22 +183,35 @@ export const Gallery = () => {
                         className="fixed inset-0 z-[60] flex items-center justify-center bg-graphite/98 backdrop-blur-md p-4"
                         onClick={() => setSelectedDrawing(null)}
                     >
-                        <button
-                            className="absolute top-6 right-6 text-paper/70 hover:text-paper transition-colors z-10"
-                            onClick={() => setSelectedDrawing(null)}
-                        >
-                            <X size={32} />
-                        </button>
+                        <div className="absolute top-4 right-4 flex gap-4 z-[70]">
+                            <button
+                                className="text-paper/70 hover:text-paper transition-colors bg-black/20 p-2 rounded-full backdrop-blur-sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowDetails(!showDetails);
+                                }}
+                                title="Ver Detalhes"
+                            >
+                                <Info size={24} />
+                            </button>
+                            <button
+                                className="text-paper/70 hover:text-paper transition-colors bg-black/20 p-2 rounded-full backdrop-blur-sm"
+                                onClick={() => setSelectedDrawing(null)}
+                                title="Fechar"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
 
                         <button
-                            className="absolute left-4 md:left-8 text-paper/50 hover:text-paper transition-colors hidden md:block z-10"
+                            className="absolute left-2 md:left-8 text-paper/50 hover:text-paper transition-colors z-[70] hidden sm:block"
                             onClick={handlePrev}
                         >
                             <ChevronLeft size={48} />
                         </button>
 
                         <button
-                            className="absolute right-4 md:right-8 text-paper/50 hover:text-paper transition-colors hidden md:block z-10"
+                            className="absolute right-2 md:right-8 text-paper/50 hover:text-paper transition-colors z-[70] hidden sm:block"
                             onClick={handleNext}
                         >
                             <ChevronRight size={48} />
@@ -207,11 +221,11 @@ export const Gallery = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="max-w-5xl w-full max-h-[90vh] flex flex-col md:flex-row gap-8 bg-paper rounded-lg overflow-hidden shadow-2xl relative"
+                            className="w-full h-full max-w-7xl max-h-[95vh] relative rounded-lg overflow-hidden shadow-2xl bg-black"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div
-                                className="flex-1 bg-black flex items-center justify-center relative overflow-hidden cursor-zoom-in min-h-[40vh] md:min-h-0"
+                                className="w-full h-full flex items-center justify-center cursor-zoom-in relative"
                                 onMouseMove={handleMouseMove}
                                 onClick={toggleZoom}
                             >
@@ -226,7 +240,7 @@ export const Gallery = () => {
                                         src={selectedDrawing.imageUrl}
                                         alt={selectedDrawing.title}
                                         className={cn(
-                                            "max-w-full max-h-[60vh] md:max-h-[85vh] object-contain transition-all duration-200",
+                                            "max-w-full max-h-full object-contain transition-all duration-200",
                                             isZoomed ? "scale-[2.5]" : "scale-100"
                                         )}
                                         style={isZoomed ? {
@@ -235,30 +249,50 @@ export const Gallery = () => {
                                         referrerPolicy="no-referrer"
                                     />
                                 </div>
-
-                                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-2 rounded-full text-white/70 pointer-events-none">
+                                
+                                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-2 rounded-full text-white/70 pointer-events-none z-10">
                                     {isZoomed ? <ZoomOut size={20} /> : <ZoomIn size={20} />}
                                 </div>
                             </div>
-                            <div className="w-full md:w-80 p-8 flex flex-col justify-center bg-paper border-l border-graphite/5 relative z-10">
-                                <span className="text-xs uppercase tracking-widest text-lead-light mb-2 font-bold">{selectedDrawing.category}</span>
-                                <h3 className="text-3xl font-serif mb-4 text-graphite">{selectedDrawing.title}</h3>
-                                <div className="w-12 h-1 bg-graphite mb-6"></div>
-                                <p className="text-lead-dark mb-8 text-sm leading-relaxed">
-                                    Uma obra detalhada criada em {selectedDrawing.year}. Este desenho explora as nuances de luz e sombra,
-                                    utilizando grafite de alta qualidade sobre papel texturizado.
-                                </p>
-                                <div className="mt-auto flex justify-between items-end border-t border-graphite/10 pt-6">
-                                    <div>
-                                        <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">Ano</p>
-                                        <p className="font-mono text-graphite">{selectedDrawing.year}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">ID</p>
-                                        <p className="font-mono text-graphite">#{selectedDrawing.id.toString().padStart(3, '0')}</p>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <AnimatePresence>
+                                {showDetails && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 20 }}
+                                        className="absolute bottom-0 left-0 w-full md:w-[400px] bg-paper/95 backdrop-blur-md border-t md:border-t-0 md:border-r border-graphite/5 p-6 md:p-8 md:h-full md:top-0 md:bottom-auto shadow-2xl overflow-y-auto"
+                                    >
+                                        <div className="flex justify-between items-start mb-6">
+                                            <span className="text-xs uppercase tracking-widest text-lead-light font-bold">{selectedDrawing.category}</span>
+                                            <button 
+                                                onClick={() => setShowDetails(false)}
+                                                className="md:hidden text-graphite/50 hover:text-graphite"
+                                            >
+                                                <X size={20} />
+                                            </button>
+                                        </div>
+                                        
+                                        <h3 className="text-2xl md:text-3xl font-serif mb-4 text-graphite">{selectedDrawing.title}</h3>
+                                        <div className="w-12 h-1 bg-graphite mb-6"></div>
+                                        <p className="text-lead-dark mb-8 text-sm leading-relaxed">
+                                            Uma obra detalhada criada em {selectedDrawing.year}. Este desenho explora as nuances de luz e sombra,
+                                            utilizando grafite de alta qualidade sobre papel texturizado.
+                                        </p>
+                                        
+                                        <div className="mt-auto pt-6 border-t border-graphite/10 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">Ano</p>
+                                                <p className="font-mono text-graphite">{selectedDrawing.year}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">ID</p>
+                                                <p className="font-mono text-graphite">#{selectedDrawing.id.toString().padStart(3, '0')}</p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     </motion.div>
                 )}

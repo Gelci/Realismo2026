@@ -43,7 +43,7 @@ export const Hero = () => {
                         <img
                             src="/logo.jpg"
                             alt="GelciArts Logo"
-                            className="h-40 md:h-52 lg:h-64 w-auto object-contain mix-blend-multiply filter contrast-125 brightness-105"
+                            className="h-32 md:h-52 lg:h-64 w-auto object-contain mix-blend-multiply filter contrast-125 brightness-105"
                             style={{
                                 maskImage: 'radial-gradient(circle, black 60%, transparent 95%)',
                                 WebkitMaskImage: 'radial-gradient(circle, black 60%, transparent 95%)'
@@ -53,14 +53,14 @@ export const Hero = () => {
 
                     <TextReveal>
                         <div className="relative inline-block">
-                            <span className="text-sm uppercase tracking-[0.3em] text-lead-light mb-4 block pl-1 relative z-10 font-bold">
+                            <span className="text-xs md:text-sm uppercase tracking-[0.3em] text-lead-light mb-4 block pl-1 relative z-10 font-bold">
                                 Realismo em Grafite
                             </span>
                             <SketchHighlight className="absolute -bottom-2 -left-2 w-full h-4 text-lead-light opacity-30 z-0" />
                         </div>
                     </TextReveal>
 
-                    <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[0.9] mb-8 relative drop-shadow-sm">
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[0.9] mb-8 relative drop-shadow-sm">
                         <TextReveal delay={0.1}>A alma no</TextReveal>
                         <TextReveal delay={0.2} className="italic relative inline-block text-graphite/90">
                             traço.

@@ -35,10 +35,10 @@ export const About = () => {
                     >
                         <SketchUnderline className="absolute -top-10 left-0 w-64 text-graphite opacity-20 -rotate-3" />
 
-                        <h2 className="text-5xl font-serif mb-8 relative inline-block text-graphite">
+                        <h2 className="text-4xl md:text-5xl font-serif mb-8 relative inline-block text-graphite">
                             Gelcimar Barbosa
                         </h2>
-                        <div className="space-y-6 text-lead-dark leading-relaxed">
+                        <div className="space-y-6 text-lead-dark leading-relaxed text-sm md:text-base">
                             <p>
                                 Conhecido artisticamente como <span className="font-bold text-graphite relative inline-block">Gelci<SketchHighlight className="absolute bottom-0 left-0 w-full h-3 text-lead-light/30 -z-10" /></span>,
                                 dedico minha vida a capturar a essência da alma humana através do grafite. Meu trabalho vai além do desenho; é uma busca incessante pela emoção que reside em cada olhar e expressão.

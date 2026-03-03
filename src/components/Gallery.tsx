@@ -243,7 +243,7 @@ export const Gallery = () => {
                             >
                                 <div
                                     className={cn(
-                                        "relative transition-transform duration-200 ease-out w-full h-full flex items-center justify-center",
+                                        "relative w-full h-full flex items-center justify-center",
                                         isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
                                     )}
                                 >
@@ -252,7 +252,7 @@ export const Gallery = () => {
                                         src={selectedDrawing.imageUrl}
                                         alt={selectedDrawing.title}
                                         className={cn(
-                                            "max-w-full max-h-full object-contain transition-all duration-200",
+                                            "max-w-full max-h-full object-contain transition-transform duration-200",
                                             isZoomed ? "scale-[2.5]" : "scale-100"
                                         )}
                                         style={isZoomed ? {

@@ -197,14 +197,14 @@ export const DRAWINGS: Drawing[] = [
   id: 25, // Use um número novo
   title: "Rakin sem muito Realismo",
   category: "Estudo", // Categoria
-  year: "2025",
+  year: "2021",
   imageUrl: "/artes/rakin3.jpg" // O caminho da sua imagem
   },
   {
   id: 26, // Use um número novo
   title: "Menina da Flor",
   category: "Estudo", // Categoria
-  year: "2024",
+  year: "2021",
   imageUrl: "/artes/03.jpg" // O caminho da sua imagem
   }
 ];

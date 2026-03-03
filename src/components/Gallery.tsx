@@ -69,6 +69,15 @@ export const Gallery = () => {
         setMousePosition({ x, y });
     };
 
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (!isZoomed || !imageRef.current) return;
+        const touch = e.touches[0];
+        const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+        const x = ((touch.clientX - left) / width) * 100;
+        const y = ((touch.clientY - top) / height) * 100;
+        setMousePosition({ x, y });
+    };
+
     const toggleZoom = (e: React.MouseEvent) => {
         e.stopPropagation();
         setIsZoomed(!isZoomed);
@@ -225,8 +234,9 @@ export const Gallery = () => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div
-                                className="w-full h-full flex items-center justify-center cursor-zoom-in relative"
+                                className="w-full h-full flex items-center justify-center cursor-zoom-in relative touch-none"
                                 onMouseMove={handleMouseMove}
+                                onTouchMove={handleTouchMove}
                                 onClick={toggleZoom}
                             >
                                 <div

@@ -12,6 +12,7 @@ export const Gallery = () => {
     const [showDetails, setShowDetails] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const categories = useMemo(() => ['Todos', 'Retrato', 'Natureza Morta', 'Paisagem', 'Estudo'], []);
 
@@ -62,20 +63,20 @@ export const Gallery = () => {
     }, [selectedDrawing, isZoomed, handleNext, handlePrev]);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isZoomed || !imageRef.current) return;
-        const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+        if (!isZoomed || !containerRef.current) return;
+        const { left, top, width, height } = containerRef.current.getBoundingClientRect();
         const x = ((e.clientX - left) / width) * 100;
         const y = ((e.clientY - top) / height) * 100;
-        setMousePosition({ x, y });
+        setMousePosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
     };
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        if (!isZoomed || !imageRef.current) return;
+        if (!isZoomed || !containerRef.current) return;
         const touch = e.touches[0];
-        const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+        const { left, top, width, height } = containerRef.current.getBoundingClientRect();
         const x = ((touch.clientX - left) / width) * 100;
         const y = ((touch.clientY - top) / height) * 100;
-        setMousePosition({ x, y });
+        setMousePosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
     };
 
     const toggleZoom = (e: React.MouseEvent) => {
@@ -234,6 +235,7 @@ export const Gallery = () => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div
+                                ref={containerRef}
                                 className="w-full h-full flex items-center justify-center cursor-zoom-in relative touch-none"
                                 onMouseMove={handleMouseMove}
                                 onTouchMove={handleTouchMove}

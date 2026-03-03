@@ -206,5 +206,19 @@ export const DRAWINGS: Drawing[] = [
   category: "Estudo", // Categoria
   year: "2021",
   imageUrl: "/artes/03.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 27, // Use um número novo
+  title: "Eduardo Duzz",
+  category: "Estudo", // Categoria
+  year: "2024",
+  imageUrl: "/artes/Duzz.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 28, // Use um número novo
+  title: "Menina da Flor",
+  category: "Estudo", // Categoria
+  year: "2025",
+  imageUrl: "/artes/Casal3.jpg" // O caminho da sua imagem
   }
 ];

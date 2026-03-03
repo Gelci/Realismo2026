@@ -28,7 +28,7 @@ export const DRAWINGS: Drawing[] = [
   {
     id: 1,
     title: "Olhar Profundo,usando a cor azul",
-    category: "Retrato",
+    category: "Animais",
     year: "2024",
     imageUrl: "/artes/cat.jpg" // O caminho da sua imagem
   },
@@ -112,14 +112,14 @@ export const DRAWINGS: Drawing[] = [
   {
   id: 13, // Use um número novo
   title: "O Rei da Selva",
-  category: "Retrato", // Categoria
+  category: "Animais", // Categoria
   year: "2023",
   imageUrl: "/artes/leao.jpg" // O caminho da sua imagem
   },
   {
   id: 14, // Use um número novo
   title: "Felino",
-  category: "Retrato", // Categoria
+  category: "Animais", // Categoria
   year: "2015",
   imageUrl: "/artes/cat2.jpg" // O caminho da sua imagem
   },
@@ -161,7 +161,7 @@ export const DRAWINGS: Drawing[] = [
   {
   id: 20, // Use um número novo
   title: "Chow Chow de estimação",
-  category: "Retrato", // Categoria
+  category: "Animais", // Categoria
   year: "2024",
   imageUrl: "/artes/negra.jpg" // O caminho da sua imagem
   },
@@ -210,7 +210,7 @@ export const DRAWINGS: Drawing[] = [
   {
   id: 27, // Use um número novo
   title: "Eduardo Duzz",
-  category: "Estudo", // Categoria
+  category: "Retrato", // Categoria
   year: "2024",
   imageUrl: "/artes/Duzz.jpg" // O caminho da sua imagem
   },
@@ -220,5 +220,75 @@ export const DRAWINGS: Drawing[] = [
   category: "Estudo", // Categoria
   year: "2025",
   imageUrl: "/artes/Casal3.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 29, // Use um número novo
+  title: "Primeira tentativa de Realismo",
+  category: "Estudo", // Categoria
+  year: "2016",
+  imageUrl: "/artes/caoestudos.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 30, // Use um número novo
+  title: "Avril Lavigne",
+  category: "Estudo", // Categoria
+  year: "2016",
+  imageUrl: "/artes/AvrilLavigne.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 31, // Use um número novo
+  title: "Madonna",
+  category: "Estudo", // Categoria
+  year: "2016",
+  imageUrl: "/artes/Madona.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 32, // Use um número novo
+  title: "Auto retrato",
+  category: "Retrato", // Categoria
+  year: "2017",
+  imageUrl: "/artes/estudos01.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 33, // Use um número novo
+  title: "Rihanna",
+  category: "Retrato", // Categoria
+  year: "2017",
+  imageUrl: "/artes/Rihanna.jpg" // O caminho da sua imagem
   }
+  {
+  id: 34, // Use um número novo
+  title: "Beijo Apaixonado",
+  category: "Retrato", // Categoria
+  year: "2016",
+  imageUrl: "/artes/Beijo.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 35, // Use um número novo
+  title: "Meu Amor",
+  category: "Retrato", // Categoria
+  year: "2016",
+  imageUrl: "/artes/BBzinha.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 36, // Use um número novo
+  title: "Naruto",
+  category: "Desenho", // Categoria
+  year: "2016",
+  imageUrl: "/artes/naruto.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 37, // Use um número novo
+  title: "Zabuza e Haku",
+  category: "Desenho", // Categoria
+  year: "2017",
+  imageUrl: "/artes/ZabuzaHaku.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 38, // Use um número novo
+  title: "Paisagem",
+  category: "Paisagem", // Categoria
+  year: "2024",
+  imageUrl: "/artes/paisagem.jpg" // O caminho da sua imagem
+  },
 ];

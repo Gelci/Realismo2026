@@ -14,7 +14,7 @@ export const Gallery = () => {
     const imageRef = useRef<HTMLImageElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const categories = useMemo(() => ['Todos', 'Retrato', 'Natureza Morta', 'Paisagem', 'Estudo'], []);
+    const categories = useMemo(() => ['Todos', 'Retrato', 'Natureza Morta', 'Paisagem', 'Estudo', 'Desenho', 'Animais'], []);
 
     const categoryCounts = useMemo(() => {
         const counts: Record<string, number> = { Todos: DRAWINGS.length };
@@ -165,7 +165,6 @@ export const Gallery = () => {
                                             <h3 className="text-lg md:text-xl font-serif italic group-hover:text-graphite transition-colors">{drawing.title}</h3>
                                             <p className="text-[10px] md:text-xs uppercase tracking-widest text-lead-light">{drawing.category}</p>
                                         </div>
-                                        <span className="text-[10px] md:text-xs font-mono text-lead-light border border-graphite/10 px-2 py-1 rounded">{drawing.year}</span>
                                     </div>
                                 </motion.div>
                             ))
@@ -288,16 +287,12 @@ export const Gallery = () => {
                                         <h3 className="text-2xl md:text-3xl font-serif mb-4 text-graphite">{selectedDrawing.title}</h3>
                                         <div className="w-12 h-1 bg-graphite mb-6"></div>
                                         <p className="text-lead-dark mb-8 text-sm leading-relaxed">
-                                            Uma obra detalhada criada em {selectedDrawing.year}. Este desenho explora as nuances de luz e sombra,
+                                            Uma obra detalhada. Este desenho explora as nuances de luz e sombra,
                                             utilizando grafite de alta qualidade sobre papel texturizado.
                                         </p>
                                         
                                         <div className="mt-auto pt-6 border-t border-graphite/10 grid grid-cols-2 gap-4">
-                                            <div>
-                                                <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">Ano</p>
-                                                <p className="font-mono text-graphite">{selectedDrawing.year}</p>
-                                            </div>
-                                            <div className="text-right">
+                                            <div className="text-left">
                                                 <p className="text-[10px] text-lead-light uppercase tracking-widest mb-1 font-bold">ID</p>
                                                 <p className="font-mono text-graphite">#{selectedDrawing.id.toString().padStart(3, '0')}</p>
                                             </div>

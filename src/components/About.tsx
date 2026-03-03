@@ -23,7 +23,7 @@ export const About = () => {
                             />
                         </div>
                         <div className="absolute -bottom-4 -left-4 bg-graphite text-paper p-6 rounded-2xl shadow-xl z-20">
-                            <p className="text-4xl font-serif italic text-white">15+</p>
+                            <p className="text-4xl font-serif italic text-white">10+</p>
                             <p className="text-xs uppercase tracking-widest opacity-70">Anos de Traço</p>
                         </div>
                     </motion.div>

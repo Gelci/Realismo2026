@@ -290,5 +290,5 @@ export const DRAWINGS: Drawing[] = [
   category: "Paisagem", // Categoria
   year: "2024",
   imageUrl: "/artes/paisagem.jpg" // O caminho da sua imagem
-  },
+  }
 ];

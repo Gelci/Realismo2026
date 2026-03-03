@@ -255,7 +255,7 @@ export const DRAWINGS: Drawing[] = [
   category: "Retrato", // Categoria
   year: "2017",
   imageUrl: "/artes/Rihanna.jpg" // O caminho da sua imagem
-  }
+  },
   {
   id: 34, // Use um número novo
   title: "Beijo Apaixonado",

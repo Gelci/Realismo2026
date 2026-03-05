@@ -6,6 +6,8 @@ export const useVisitorStats = () => {
     const [onlineUsers, setOnlineUsers] = useState<number>(1);
 
     useEffect(() => {
+        console.log('--- SITE VERSION: 2.1 (Contador Invisível via RPC) ---');
+
         // Verifica se o Supabase está configurado antes de tentar conectar
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;

@@ -6,6 +6,16 @@ export const useVisitorStats = () => {
     const [onlineUsers, setOnlineUsers] = useState<number>(1);
 
     useEffect(() => {
+        // Verifica se o Supabase está configurado antes de tentar conectar
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseAnonKey) {
+            console.warn('Supabase não configurado. Usando modo offline.');
+            setVisits(1234); // Valor de exemplo
+            return;
+        }
+
         // 1. Incrementar e buscar visitas totais
         const fetchVisits = async () => {
             try {

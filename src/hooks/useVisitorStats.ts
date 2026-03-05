@@ -18,10 +18,17 @@ export const useVisitorStats = () => {
         // 1. Apenas incrementar visitas (sem buscar o total para exibição)
         const incrementVisits = async () => {
             try {
+                console.log('Tentando incrementar visitas no Supabase...');
                 // Chama a função RPC para incrementar
-                await supabase.rpc('increment_visits');
+                const { error } = await supabase.rpc('increment_visits');
+                
+                if (error) {
+                    console.error('Erro RPC Supabase:', error);
+                } else {
+                    console.log('Visita incrementada com sucesso!');
+                }
             } catch (err) {
-                console.error('Erro ao incrementar estatísticas:', err);
+                console.error('Erro inesperado ao incrementar estatísticas:', err);
             }
         };
 

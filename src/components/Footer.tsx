@@ -1,5 +1,6 @@
 import React from 'react';
 import { Instagram } from 'lucide-react';
+import { VisitorStats } from './VisitorStats';
 
 export const Footer = () => {
     return (
@@ -9,6 +10,9 @@ export const Footer = () => {
                 <p className="text-sm text-lead-light font-medium tracking-wide">
                     © {new Date().getFullYear()} GelciArts. Todos os direitos reservados.
                 </p>
+                
+                <VisitorStats />
+
                 <div className="flex space-x-6">
                     <a
                         href="https://www.instagram.com/gelciarts/"

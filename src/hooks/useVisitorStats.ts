@@ -11,32 +11,21 @@ export const useVisitorStats = () => {
         const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
         if (!supabaseUrl || !supabaseAnonKey) {
-            console.warn('Supabase não configurado. Usando modo offline.');
-            setVisits(1234); // Valor de exemplo
+            console.warn('Supabase não configurado. As estatísticas não serão enviadas.');
             return;
         }
 
-        // 1. Incrementar e buscar visitas totais
-        const fetchVisits = async () => {
+        // 1. Apenas incrementar visitas (sem buscar o total para exibição)
+        const incrementVisits = async () => {
             try {
                 // Chama a função RPC para incrementar
                 await supabase.rpc('increment_visits');
-                
-                // Busca o valor atualizado
-                const { data } = await supabase
-                    .from('site_stats')
-                    .select('total_visits')
-                    .single();
-
-                if (data) {
-                    setVisits(data.total_visits);
-                }
             } catch (err) {
-                console.error('Erro ao buscar estatísticas:', err);
+                console.error('Erro ao incrementar estatísticas:', err);
             }
         };
 
-        fetchVisits();
+        incrementVisits();
 
         // 2. Monitorar usuários online em tempo real (Presence)
         const channel = supabase.channel('online-users', {

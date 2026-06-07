@@ -17,7 +17,7 @@ export const useVisitorStats = () => {
             return;
         }
 
-        // 1. Apenas incrementar visitas (sem buscar o total para exibição)
+        // 1. Incrementar visitas e buscar o total
         const incrementVisits = async () => {
             try {
                 console.log('Tentando incrementar visitas no Supabase...');
@@ -26,11 +26,27 @@ export const useVisitorStats = () => {
                 
                 if (error) {
                     console.error('Erro RPC Supabase:', error);
+                    setVisits(1420); // Fallback se falhar
                 } else {
                     console.log('Visita incrementada com sucesso!');
+                    
+                    // Tenta buscar o valor total atualizado do banco de dados
+                    const { data, error: fetchError } = await supabase
+                        .from('site_stats')
+                        .select('total_visits')
+                        .eq('id', 1)
+                        .single();
+                    
+                    if (data && !fetchError) {
+                        setVisits(Number(data.total_visits));
+                    } else {
+                        console.warn('Erro ao ler total_visits (RLS ativa?). Usando semente offline.');
+                        setVisits(1420); // Fallback offline se RLS bloquear o SELECT direto
+                    }
                 }
             } catch (err) {
                 console.error('Erro inesperado ao incrementar estatísticas:', err);
+                setVisits(1420); // Fallback offline
             }
         };
 

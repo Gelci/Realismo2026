@@ -12,20 +12,32 @@
   --color-lead-dark: #404040;
 }
 
+/* Redefinição de variáveis no tema escuro */
+html.dark {
+  --color-paper: #121212;
+  --color-graphite: #F5F5F2;
+  --color-lead-light: #8A8A8A;
+  --color-lead-dark: #CCCCCC;
+}
+
 @layer base {
   body {
-    @apply bg-paper text-graphite font-sans antialiased tracking-tight;
+    @apply bg-paper text-graphite font-sans antialiased tracking-tight transition-colors duration-500;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-serif tracking-tight text-graphite;
+    @apply font-serif tracking-tight text-graphite transition-colors duration-300;
   }
 
   p {
-    @apply leading-relaxed text-lead-dark;
+    @apply leading-relaxed text-lead-dark transition-colors duration-300;
+  }
+
+  a, button {
+    @apply transition-colors duration-300;
   }
 }
 

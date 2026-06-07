@@ -43,7 +43,7 @@ export const Hero = () => {
                         <img
                             src="/logo.jpg"
                             alt="GelciArts Logo"
-                            className="h-32 md:h-52 lg:h-64 w-auto object-contain mix-blend-multiply filter contrast-125 brightness-105"
+                            className="h-32 md:h-52 lg:h-64 w-auto object-contain mix-blend-multiply dark:mix-blend-screen filter contrast-125 brightness-105 dark:invert dark:contrast-100 dark:brightness-100 transition-all duration-500"
                             style={{
                                 maskImage: 'radial-gradient(circle, black 60%, transparent 95%)',
                                 WebkitMaskImage: 'radial-gradient(circle, black 60%, transparent 95%)'
@@ -104,11 +104,11 @@ export const Hero = () => {
                     transition={{ duration: 1.2, delay: 0.2 }}
                     className="w-full md:w-1/2 relative aspect-[4/5] max-w-lg mx-auto md:mr-0"
                 >
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible" viewBox="0 0 400 500">
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible text-graphite" viewBox="0 0 400 500">
                         <motion.path
                             d="M10,10 L390,10 L390,490 L10,490 Z"
                             fill="none"
-                            stroke="#1A1A1A"
+                            stroke="currentColor"
                             strokeWidth="2"
                             strokeDasharray="10 10"
                             initial={{ pathLength: 0, opacity: 0 }}
@@ -118,7 +118,7 @@ export const Hero = () => {
                         <motion.path
                             d="M-10,20 L380,20 L380,500 L-10,500 Z"
                             fill="none"
-                            stroke="#1A1A1A"
+                            stroke="currentColor"
                             strokeWidth="1"
                             initial={{ pathLength: 0, opacity: 0 }}
                             whileInView={{ pathLength: 1, opacity: 0.1 }}

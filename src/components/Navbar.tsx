@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { useDarkMode } from '../hooks/useDarkMode';
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const { isDark, toggleTheme } = useDarkMode();
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -31,22 +33,57 @@ export const Navbar = () => {
                 </a>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex space-x-8">
+                <div className="hidden md:flex items-center space-x-8">
                     {navLinks.map((link) => (
                         <a
                             key={link.name}
                             href={link.href}
-                            className="text-sm uppercase tracking-widest font-medium hover:text-lead-light transition-colors"
+                            className="text-sm uppercase tracking-widest font-medium hover:text-lead-light transition-colors text-graphite"
                         >
                             {link.name}
                         </a>
                     ))}
+
+                    {/* Botão de Tema (Desktop) */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-full hover:bg-graphite/10 transition-colors text-graphite cursor-pointer"
+                        title={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+                        aria-label="Alternar tema"
+                    >
+                        <motion.div
+                            initial={false}
+                            animate={{ rotate: isDark ? 180 : 0, scale: 1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{ type: "spring", stiffness: 200, damping: 12 }}
+                        >
+                            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                        </motion.div>
+                    </button>
                 </div>
 
-                {/* Mobile Toggle */}
-                <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-                    {isOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                {/* Controles Mobile (Tema + Menu Hambúrguer) */}
+                <div className="flex items-center gap-4 md:hidden">
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-full hover:bg-graphite/10 transition-colors text-graphite cursor-pointer"
+                        title={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+                        aria-label="Alternar tema"
+                    >
+                        <motion.div
+                            initial={false}
+                            animate={{ rotate: isDark ? 180 : 0, scale: 1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{ type: "spring", stiffness: 200, damping: 12 }}
+                        >
+                            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                        </motion.div>
+                    </button>
+
+                    <button className="text-graphite cursor-pointer" onClick={() => setIsOpen(!isOpen)} aria-label="Menu">
+                        {isOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -66,7 +103,7 @@ export const Navbar = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.1 }}
                                 onClick={() => setIsOpen(false)}
-                                className="text-lg font-serif italic"
+                                className="text-lg font-serif italic text-graphite"
                             >
                                 {link.name}
                             </motion.a>

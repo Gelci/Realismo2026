@@ -14,7 +14,7 @@ export const About = () => {
                         className="relative"
                     >
                         <div className="absolute top-0 -left-10 w-full h-full border-2 border-graphite/10 rounded-full scale-110 -rotate-6 pointer-events-none" style={{ borderStyle: 'dashed' }}></div>
-                        <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-2xl max-w-md mx-auto relative z-10">
+                        <div className="aspect-square rounded-full overflow-hidden border-8 border-white dark:border-neutral-800 shadow-2xl max-w-md mx-auto relative z-10">
                             <img
                                 src="/artista.jpg"
                                 alt="Gelcimar Barbosa"

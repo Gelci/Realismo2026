@@ -290,5 +290,26 @@ export const DRAWINGS: Drawing[] = [
   category: "Paisagem", // Categoria
   year: "2024",
   imageUrl: "/artes/paisagem.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 39, // Use um número novo
+  title: "Benjamin",
+  category: "Retrato", // Categoria
+  year: "2026",
+  imageUrl: "/artes/Ben.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 40, // Use um número novo
+  title: "Rakin",
+  category: "Retrato", // Categoria
+  year: "2024",
+  imageUrl: "/artes/rakin4.jpg" // O caminho da sua imagem
+  },
+  {
+  id: 41, // Use um número novo
+  title: "Sobrinho",
+  category: "Retrato", // Categoria
+  year: "2024",
+  imageUrl: "/artes/Bryan.jpg" // O caminho da sua imagem
   }
 ];

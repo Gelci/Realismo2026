@@ -216,7 +216,7 @@ export const DRAWINGS: Drawing[] = [
   },
   {
   id: 28, // Use um número novo
-  title: "Menina da Flor",
+  title: "Casal",
   category: "Estudo", // Categoria
   year: "2025",
   imageUrl: "/artes/Casal3.jpg" // O caminho da sua imagem
